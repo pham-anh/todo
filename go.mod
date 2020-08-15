@@ -1,4 +1,4 @@
-module github.com/pham-anh/todo
+module github.com/pham-anh/tri
 
 go 1.14
 
