@@ -2,7 +2,7 @@ package todo
 
 import (
 	"encoding/json"
-	"fmt"
+	"io/ioutil"
 )
 
 type Item struct {
@@ -15,6 +15,10 @@ func SaveItems(filename string, items []Item) error {
 		return err
 	}
 
-	fmt.Println(string(b))
+	err = ioutil.WriteFile(filename, b, 0644)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

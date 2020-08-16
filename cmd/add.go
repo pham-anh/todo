@@ -16,6 +16,8 @@ limitations under the License.
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/pham-anh/tri/todo"
 	"github.com/spf13/cobra"
 )
@@ -39,7 +41,10 @@ func addRun(cmd *cobra.Command, args []string) {
 		items = append(items, todo.Item{Text: x})
 	}
 
-	todo.SaveItems("x", items)
+	err := todo.SaveItems("./tridos.json", items)
+	if err != nil {
+		fmt.Errorf("%v", err)
+	}
 }
 
 func init() {
