@@ -18,6 +18,9 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"os"
+	"text/tabwriter"
+	"strconv"
 
 	"github.com/pham-anh/tri/todo"
 	"github.com/spf13/cobra"
@@ -33,15 +36,22 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		items, err := todo.ReadItems(datafile)
+	Run: listRun,
+}
 
-		if err != nil {
-			log.Printf("%v", err)
-		}
+func listRun(cmd *cobra.Command, args []string) {
+	items, err := todo.ReadItems(datafile)
 
-		fmt.Println(items)
-	},
+	if err != nil {
+		log.Printf("%v", err)
+	}
+
+	w := tabwriter.NewWriter(os.Stdout, 3, 0, 1, ' ', 0)
+	for _, i := range items {
+		fmt.Fprintln(w, strconv.Itoa(i.Priority)+"\t"+i.Text+"\t")
+	}
+
+	w.Flush()
 }
 
 func init() {
