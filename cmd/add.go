@@ -37,7 +37,7 @@ to quickly create a Cobra application.`,
 }
 
 func addRun(cmd *cobra.Command, args []string) {
-	items, err := todo.ReadItems("../.tridos.json")
+	items, err := todo.ReadItems(datafile)
 	if err != nil {
 		log.Printf("%v", err)
 	}
@@ -45,7 +45,7 @@ func addRun(cmd *cobra.Command, args []string) {
 		items = append(items, todo.Item{Text: x})
 	}
 
-	err = todo.SaveItems("../.tridos.json", items)
+	err = todo.SaveItems(datafile, items)
 	if err != nil {
 		fmt.Errorf("%v", err)
 	}
