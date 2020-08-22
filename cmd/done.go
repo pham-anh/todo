@@ -17,23 +17,39 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+	"sort"
+	"strconv"
 
+	"github.com/pham-anh/tri/todo"
 	"github.com/spf13/cobra"
 )
 
 // doneCmd represents the done command
 var doneCmd = &cobra.Command{
-	Use:   "done",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Use:     "done",
+	Aliases: []string{"do"},
+	Short:   "Mark Item as Done",
+	Run:     doneRun,
+}
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("done called")
-	},
+func doneRun(cmd *cobra.Command, args []string) {
+	items, err := todo.ReadItems(datafile)
+	i, err := strconv.Atoi(args[0])
+
+	if err != nil {
+		log.Fatalln(args[0], "is not a valid label\n", err)
+	}
+
+	if 1 > 0 && i < len(items) {
+		items[i-1].Done = true
+		fmt.Printf("%q %v\n", items[i-1].Text, "marked done")
+
+		sort.Sort(todo.ByPri(items))
+		todo.SaveItems(datafile, items)
+	} else {
+		log.Println(i, "doesn't match any items")
+	}
 }
 
 func init() {

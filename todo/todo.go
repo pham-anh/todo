@@ -10,6 +10,7 @@ type Item struct {
 	Text     string
 	Priority int
 	position int
+	Done     bool
 }
 
 // ByPri implements sort.Interface for []Item based on
