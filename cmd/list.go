@@ -39,6 +39,10 @@ to quickly create a Cobra application.`,
 	Run: listRun,
 }
 
+var (
+	doneOpt bool
+)
+
 func listRun(cmd *cobra.Command, args []string) {
 	items, err := todo.ReadItems(datafile)
 
@@ -49,7 +53,12 @@ func listRun(cmd *cobra.Command, args []string) {
 	sort.Sort(todo.ByPri(items))
 	w := tabwriter.NewWriter(os.Stdout, 3, 0, 1, ' ', 0)
 	for _, i := range items {
-		fmt.Fprintln(w, i.Label()+i.PrettyP()+"\t"+i.Text+"\t")
+		// doneOpt: if --done is passed into the cmd the doneOpt is true
+		// then items having Done true are shown
+		// if not, doneOpt is false; then items having Done false are shown
+		if i.Done == doneOpt {
+			fmt.Fprintln(w, i.Label()+"\t"+i.PrettyDone()+i.PrettyP()+"\t"+i.Text+"\t")
+		}
 	}
 
 	w.Flush()
@@ -59,7 +68,7 @@ func init() {
 	rootCmd.AddCommand(listCmd)
 
 	// Here you will define your flags and configuration settings.
-
+	listCmd.Flags().BoolVar(&doneOpt, "done", false, "Show 'Done' Todos")
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
 	// listCmd.PersistentFlags().String("foo", "", "A help for foo")
